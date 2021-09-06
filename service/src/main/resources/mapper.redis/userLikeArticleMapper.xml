@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wfg.mapper.UserLikeArticleMapper">
+
+   <!--新增-->
+    <insert id="insert" parameterType="wfg.dao.UserLikeArt">
+        insert  into  user_like_article (
+             <if test="userId   != null and userId    !=''">user_id,</if>
+             <if test="articleId!= null and articleId !=''">article_id</if>
+        )
+      values(
+        <if test="userId != null and userId !=''">#{userId},</if>
+        <if test="articleId!=null and articleId!=''">#{articleId}</if>
+        )
+
+    </insert>
+
+    <!--查询-->
+    <select id="selectById" resultType="wfg.dao.UserLikeArt" parameterType="long">
+      select * from  user_like_article where id =#{id} and deleted =0
+    </select>
+    <!--按条件查询-->
+    <select id="selectByOne" resultType="wfg.dao.UserLikeArt">
+        select * from  user_like_article
+            <where>
+                <if test="userId   != null and userId    !=''"> and user_id=#{userId}</if>
+                <if test="articleId!=null and articleId!=''">and article_id=#{articleId}</if>
+                and deleted=0
+            </where>
+    </select>
+
+    <!--更新-->
+    <update id="updateModified" parameterType="wfg.dao.UserLikeArt">
+        update user_like_article
+          <set>
+              <if test="userId !=   null and userId != ''">user_id=#{userId},</if>
+              <if test="articleId!= null and articleId !=''">article_id=#{articleId},</if>
+             modified=sysdate()
+          </set>
+        where id=#{id}
+    </update>
+
+    <!--删除-->
+    <update id="deletedById" parameterType="long">
+        update user_like_article set deleted =1 where id=#{id}
+    </update>
+</mapper>

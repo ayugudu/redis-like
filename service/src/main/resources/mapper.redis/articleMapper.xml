@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wfg.mapper.ArticleMapper">
+
+    <resultMap id="articleResult" type="wfg.dao.Article">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="content" column="content" />
+        <result property="articleName" column="articleName"/>
+        <result property="totalLike" column="total_like"/>
+    </resultMap>
+
+    <!--新增-->
+    <insert id="insert" parameterType="wfg.dao.Article">
+        insert into article(
+             <if test="userId !=null and userId != ''">user_id,</if>
+             <if test="content!=null and content !=''">content,</if>
+             <if test="articleName!=null and articleName!=''"> article_name,</if>
+              <if test="totalLike!=null and totalLike!=''">total_like</if>
+        )values (
+        <if test="userId !=null and userId != ''">#{userId},</if>
+        <if test="content!=null and content !=''">#{content},</if>
+        <if test="articleName!=null and articleName!=''"> #{articleName},</if>
+        <if test="totalLike!=null and totalLike!=''">#{tatalLike}</if>
+                        )
+    </insert>
+
+    <!--更新文章-->
+    <update id="updateModified" parameterType="wfg.dao.Article">
+
+       update article
+             <set>
+                 <if test="userId !=null and UserId!=''">user_id=#{userId},</if>
+                 <if test="content!=null and content!= ''">content=#{content},</if>
+                 <if test="articleName!=null and articleName!=''"> article_name=#{articleName},</if>
+                 <if test="totalLike!=null and totalLike!=''">total_like=#{tatalLike},</if>
+                 mofified=sysdate()
+             </set>
+        where id =#{id}
+    </update>
+
+
+    <!--查询-->
+    <select id="selectById" parameterType="long" resultMap="articleResult">
+     select id,user_id,article_name,content,total_like from article where id=#{id} and deleted = 0
+    </select>
+
+    <!--删除-->
+    <update id="deletedById" parameterType="long">
+        update article set deletrd = 1  where id=#{id}
+    </update>
+
+</mapper>
